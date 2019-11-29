@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom';
 import { UserSession } from 'blockstack';
 import { jsonCopy, subjectFromKingdomUrl, loadRuler, loadSubjects, resolveSubjects } from './utils';
 import Subject from './Subject';
-import { appConfig, SUBJECTS_FILENAME, EXPLORER_URL } from './constants';
+import { appConfig, SUBJECTS_FILENAME, EXPLORER_URL, TERRITORIES, ANIMALS } from './constants';
 
 import './Kingdom.css';
 
@@ -42,13 +42,19 @@ class Kingdom extends Component {
     }
   }
 
-  componentWillReceiveProps(nextProps) {
+  static getDerivedStateFromProps(nextProps, prevState) {
     const nextSubjects = nextProps.subjects;
     if (nextSubjects) {
-      if (nextSubjects.length !== this.state.subjects.length) {
-        this.setState({ subjects: jsonCopy(nextSubjects) });
-      }
-      resolveSubjects(this, this.userSession, nextSubjects);
+      if (nextSubjects.length !== prevState.subjects.length) {
+        console.log({ nextProps });
+        return { subjects: jsonCopy(nextSubjects) };
+      } else return null;
+    }
+  }
+
+  componentDidUpdate(prevProps, prevState) {
+    if (prevProps.subjects && prevProps.subjects.length !== prevState.subjects.length) {
+      resolveSubjects(this, this.userSession, prevProps.subjects);
     }
   }
 
@@ -56,9 +62,9 @@ class Kingdom extends Component {
     this.setState({ value: event.target.value });
   }
 
-  async loadKingdom(ruler, app) {
-    console.log('AaAAAAAAAAAAAA', await loadRuler(this.userSession, ruler, app));
+  loadKingdom(ruler, app) {
     loadRuler(this.userSession, ruler, app).then(ruler => {
+      console.log({ ruler });
       if (ruler) {
         this.setState({ ruler });
       }
@@ -101,14 +107,17 @@ class Kingdom extends Component {
   render() {
     const mine = this.props.myKingdom;
     const ruler = this.state.ruler;
-    const rulerAnimal = ruler.animal;
-    const rulerTerritory = ruler.territory;
+    let rulerAnimal = ruler.animal;
+    if (!rulerAnimal) rulerAnimal = ANIMALS[0];
+    let rulerTerritory = ruler.territory;
+    if (!rulerTerritory) rulerTerritory = TERRITORIES[0];
     const username = this.state.rulerUsername;
     const subjects = this.state.subjects;
     const myKingdom = this.props.myKingdom;
     const app = this.state.app;
     const clickAdd = this.state.clickAdd;
     const currentUsername = this.props.currentUsername;
+
     return (
       <div className="Kingdom">
         <div className="row">
