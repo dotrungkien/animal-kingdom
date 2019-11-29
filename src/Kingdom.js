@@ -46,10 +46,10 @@ class Kingdom extends Component {
     const nextSubjects = nextProps.subjects;
     if (nextSubjects) {
       if (nextSubjects.length !== prevState.subjects.length) {
-        console.log({ nextProps });
         return { subjects: jsonCopy(nextSubjects) };
-      } else return null;
+      }
     }
+    return null;
   }
 
   componentDidUpdate(prevProps, prevState) {
@@ -64,7 +64,6 @@ class Kingdom extends Component {
 
   loadKingdom(ruler, app) {
     loadRuler(this.userSession, ruler, app).then(ruler => {
-      console.log({ ruler });
       if (ruler) {
         this.setState({ ruler });
       }

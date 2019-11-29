@@ -40,7 +40,7 @@ class OtherKingdoms extends Component {
             })
             .catch(error => {
               console.log('problem loading subjects');
-              console.log(error);
+              // console.log(error);
               kingdoms[index].subjects = [];
               kingdoms[index].error = true;
               this.setState({ kingdom });
@@ -48,7 +48,7 @@ class OtherKingdoms extends Component {
         })
         .catch(error => {
           console.log('ruler not found');
-          console.log(error);
+          // console.log(error);
           kingdoms[index] = {
             error: true,
             ruler: {

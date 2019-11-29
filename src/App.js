@@ -1,9 +1,10 @@
 import React, { Component } from 'react';
 import './App.css';
-import { UserSession } from 'blockstack';
-
+import { UserSession, config } from 'blockstack';
 import Landing from './Landing';
 import SignedIn from './SignedIn';
+
+config.logLevel = 'error';
 
 class App extends Component {
   constructor() {
